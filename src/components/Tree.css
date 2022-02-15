@@ -1,0 +1,56 @@
+li {
+  list-style: none;
+  /* margin-left: 24px; */
+}
+.tree {
+  cursor: pointer;
+  padding: 12px;
+  text-align: center;
+  /* width: 10%; */
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: #d6e6ff;
+}
+.react-contextmenu-wrapper {
+  width: 10%;
+
+
+}
+.sub {
+  margin-left: 80px;
+  margin-top: 3px;
+    /* width: 10%; */
+
+}
+.tree:hover {
+  background: #cfdef5;
+}
+span {
+  margin-left: 5px;
+}
+
+span {
+  color: #116dff;
+}
+
+@media only screen and (max-width: 1500px) {
+  span {
+    margin-left: 2.5px;
+  }
+  .sub {
+    margin-left: 50px;
+    margin-top: 3px;
+  }
+}
+@media only screen and (max-width: 800px) {
+  body {
+    background-color: rgb(184, 184, 184);
+  }
+  span {
+    margin-left: 2.5px;
+  }
+  .sub {
+    margin-left: 180px;
+    margin-top: 3px;
+  }
+}
