@@ -1,108 +1,64 @@
 import React, { Fragment, useState } from "react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { ContextMenuTrigger } from "react-contextmenu";
-import RightClickMenu from "./RightClickMenu";
 import "./Tree.css";
 
-const TreeList = ({
-  tree,
-  renameItem,
-  saveTree,
-  addSubmenu,
-  loadTreeFromDb,
-  deleteItem,
-  handleMenuSelection,
-  selectedMenus,
-  depth = 0,
-}) => {
+const TreeList = ({ tree, depth = 0 }) => {
   const [isTreeOpen, setIsTreeOpen] = useState(false);
-  const { id, label, branches = [] } = tree;
+  const [selectedMenus, setSelectedMenus] = useState([]);
+  const icon = !isTreeOpen ? <IoChevronDown /> : <IoChevronUp />;
+
+  const handleMenuSelection = (id, depth) => {
+    setSelectedMenus((prevSelectedMenus) => {
+      const newSelectedMenus = [...prevSelectedMenus];
+      newSelectedMenus[depth] = id;
+
+      // close when clicking on the same menu
+      if (selectedMenus[depth] === id) {
+        newSelectedMenus.length = depth;
+      }
+      return newSelectedMenus;
+    });
+  };
 
   return (
     <Fragment>
-      {branches.length > 0 ? (
-        <div>
+      {Array.isArray(tree) &&
+        tree.map((item) => (
           <ContextMenuTrigger
-            className="context"
             id="contextmenu"
-            contextId={tree.id}
-            depth={depth}
-            selectedMenus={selectedMenus}
+            key={item.id}
+            contextId={item.id}
             collect={(p) => p}
+            contextDepth={depth + 1}
           >
-            <div
-              className="tree"
-              onClick={() => {
-                setIsTreeOpen((prev) => !prev);
-                handleMenuSelection(id, depth, branches);
-              }}
-            >
-              <RightClickMenu
-                deleteItem={() => deleteItem(depth)}
-                addSubmenu={() => addSubmenu(depth)}
-                renameItem={() => renameItem(depth)}
-                saveTree={() => saveTree(depth)}
-                loadTreeFromDb={loadTreeFromDb}
-              />
-              {isTreeOpen ? (
-                <span>
-                  {label}
-                  <IoChevronUp />
-                </span>
-              ) : (
-                <span>
-                  {label}
-                  <IoChevronDown />
-                </span>
+            <div className="container">
+              <div
+                className="tree"
+                onClick={() => {
+                  setIsTreeOpen((prev) => !prev);
+                  handleMenuSelection(item.id, depth);
+                }}
+              >
+                <span>{item.label}</span>
+                {item.branches !== undefined && icon}
+              </div>
+              {/*Base Case*/}
+              {item.branches && selectedMenus[depth] === item.id && (
+                <div className="sub">
+                  <TreeList
+                    id={item.id}
+                    tree={item.branches}
+                    depth={depth + 1}
+                    selectedMenus={selectedMenus}
+                  />
+                </div>
               )}
             </div>
           </ContextMenuTrigger>
-
-          {selectedMenus[depth] === id && (
-            <div className="sub" depth={depth}>
-              {branches.map((child, index) => {
-                const childDepth = depth + 1;
-                return (
-                  <TreeList
-                    id={child.id}
-                    tree={child}
-                    handleMenuSelection={handleMenuSelection}
-                    key={child.id}
-                    depth={childDepth}
-                    selectedMenus={selectedMenus}
-                    deleteItem={deleteItem}
-                    renameItem={renameItem}
-                    loadTreeFromDb={loadTreeFromDb}
-                    saveTree={saveTree}
-                    addSubmenu={addSubmenu}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-      ) : (
-        <ContextMenuTrigger
-          id="contextmenu"
-          contextId={tree.id}
-          collect={(p) => p}
-        >
-          <div
-            className="tree"
-            onClick={() => handleMenuSelection("", depth, tree)}
-          >
-            <RightClickMenu
-              deleteItem={deleteItem}
-              renameItem={renameItem}
-              loadTreeFromDb={loadTreeFromDb}
-              saveTree={saveTree}
-              addSubmenu={addSubmenu}
-            />
-            <li>{label}</li>
-          </div>
-        </ContextMenuTrigger>
-      )}
+        ))}
     </Fragment>
   );
 };
+
 export default TreeList;

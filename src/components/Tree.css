@@ -1,39 +1,34 @@
-li {
-  list-style: none;
-  /* margin-left: 24px; */
+.container {
+  /* width: 140px; */
+}
+.react-contextmenu-wrapper {
+  width: 140px;
 }
 .tree {
   cursor: pointer;
-  padding: 12px;
   text-align: center;
-  /* width: 10%; */
-  border: 1px solid black;
+  padding: 14px;
   border-radius: 4px;
+  border: 1px solid black;
   background-color: #d6e6ff;
-}
-.react-contextmenu-wrapper {
-  width: 10%;
-
-
+  width: 100%;
 }
 .sub {
-  margin-left: 80px;
+  margin-left: 120px;
   margin-top: 3px;
-    /* width: 10%; */
 
+  /* width: 120px;
+  height: 50px; */
 }
-.tree:hover {
-  background: #cfdef5;
-}
-span {
-  margin-left: 5px;
-}
-
 span {
   color: #116dff;
 }
 
-@media only screen and (max-width: 1500px) {
+.tree:hover {
+  background: #cfdef5;
+}
+
+/* @media only screen and (max-width: 1500px) {
   span {
     margin-left: 2.5px;
   }
@@ -53,4 +48,4 @@ span {
     margin-left: 180px;
     margin-top: 3px;
   }
-}
+} */

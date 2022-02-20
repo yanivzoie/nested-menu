@@ -1,36 +1,27 @@
 import React, { Fragment, useEffect, useState } from "react";
-import TreeList from "./TreeList";
 import axios from "axios";
-import "./Tree.css";
-import { data } from "../data";
+import { mockData } from "../data";
 import FormDialog from "./FormDialog";
+import TreeList from "./TreeList";
+import RightClickMenu from "./RightClickMenu";
 
 const URL =
   "https://nested-menu-1cecc-default-rtdb.europe-west1.firebasedatabase.app/menu.json";
 const Tree = () => {
-  const [selectedMenus, setSelectedMenus] = useState([]);
   const [tree, setTree] = useState([]);
   const [isAddSubmenuDialogOpen, setIsAddSubmenuDialogOpen] = useState(false);
-  const handleMenuSelection = (id, depth, branches) => {
-    setSelectedMenus((prevSelectedMenus) => {
-      const newSelectedMenus = [...prevSelectedMenus];
-      // trim any menus after the depth
-      newSelectedMenus.length = depth;
-      if (id !== "") {
-        newSelectedMenus[depth] = id;
-      }
-      // close when clicking on the same menu
-      if (selectedMenus[depth] === id) {
-        newSelectedMenus.length = depth;
-      }
-      return newSelectedMenus;
-    });
-  };
+  const [isEditSubmenuDialogOpen, setIsEditSubmenuDialogOpen] = useState(false);
+  const [edit, setEdit] = useState({
+    id: null,
+    value: "",
+  });
+
   useEffect(() => {
     fetchDataFromDb().then((result) => {
       setTree(result.data);
     });
   }, []);
+
   const fetchDataFromDb = async () => {
     try {
       return await axios.get(URL);
@@ -38,8 +29,8 @@ const Tree = () => {
       console.log(error);
     }
   };
-  const handleDeleteItem = (e, id, depth) => {
-    depth !== undefined && e.stopPropagation();
+
+  const handleDeleteItem = (id) => {
     const removeTreeItem = (list, id) => {
       return list
         .map((item) => {
@@ -55,67 +46,81 @@ const Tree = () => {
     const newTree = removeTreeItem(tree, id);
     setTree(newTree);
   };
-  const handleRenameItem = (e, id, depth) => {
-    e.stopPropagation();
-    const findItemNested = (arr, itemId, nestingKey) => {
-      const myReducer = arr.reduce((a, item) => {
-        if (a) return a;
-        if (item.id === itemId) return item;
-        if (item[nestingKey])
-          return findItemNested(item[nestingKey], itemId, nestingKey);
-      }, null);
-      return myReducer;
-    };
-    const res = findItemNested(data, id, "branches");
-    console.log(res);
-  };
-  const handleAddSubmenu = (e, id, depth) => {
-    depth !== undefined && e.stopPropagation();
-    console.log(id);
-    setIsAddSubmenuDialogOpen((prev) => !prev);
-  };
+
   const handleSaveTree = async () => {
-    const response = await axios.put(URL, data);
+    const response = await axios.put(URL, tree);
     return response;
   };
   const handleLoadTreeFromDb = async () => {
     const result = await fetchDataFromDb();
     if (result) setTree(result.data);
   };
-  const closeDialoge = () => {
-    setIsAddSubmenuDialogOpen(false);
+
+  const handleAddSubmenu = (id) => {
+    setIsAddSubmenuDialogOpen((prev) => !prev);
+    setEdit({ id: id, value: "" });
   };
-  const addSubmenu = (newSubmenu) => {
-    console.log(newSubmenu, tree);
+  const onAddSubmenuSubmit = (newValue) => {
+    const newId = edit.id;
+    const iterate = (obj) => {
+      Object.keys(obj).map((key) => {
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          obj[key].id === newId &&
+            setTree([...tree], (obj[key].label = newValue.label));
+          iterate(obj[key]);
+          if (obj[key].length === 0) return null;
+        }
+      });
+    };
+    iterate(tree);
   };
 
+  const handleRenameItem = (id) => {
+    setIsEditSubmenuDialogOpen((prev) => !prev);
+    setEdit({ id: id, value: "" });
+  };
+  const onEditSubmenuSubmit = (newValue) => {
+    const newId = edit.id;
+    const iterate = (obj) => {
+      Object.keys(obj).map((key) => {
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          obj[key].id === newId &&
+            setTree([...tree], (obj[key].label = newValue.label));
+          iterate(obj[key]);
+          if (obj[key].length === 0) return null;
+        }
+      });
+    };
+    iterate(tree);
+  };
   return (
     <Fragment>
       {isAddSubmenuDialogOpen ? (
         <FormDialog
           shouldOpen={isAddSubmenuDialogOpen}
-          closeDialog={() => closeDialoge()}
-          addSubmenu={(sub) => addSubmenu(sub)}
+          closeDialog={() => setIsAddSubmenuDialogOpen(false)}
+          onAddSubmenuSubmit={(newSubmenu) => onAddSubmenuSubmit(newSubmenu)}
           dialogTitle="Add Submenu"
+          isEdit={false}
         />
       ) : null}
-      <ul>
-        {tree.map((item) => {
-          return (
-            <TreeList
-              tree={item}
-              handleMenuSelection={handleMenuSelection}
-              key={item.id}
-              selectedMenus={selectedMenus}
-              deleteItem={handleDeleteItem}
-              renameItem={handleRenameItem}
-              saveTree={handleSaveTree}
-              loadTreeFromDb={handleLoadTreeFromDb}
-              addSubmenu={handleAddSubmenu}
-            />
-          );
-        })}
-      </ul>
+      {isEditSubmenuDialogOpen ? (
+        <FormDialog
+          shouldOpen={isEditSubmenuDialogOpen}
+          closeDialog={() => setIsEditSubmenuDialogOpen(false)}
+          onEditSubmenuSubmit={(newSubmenu) => onEditSubmenuSubmit(newSubmenu)}
+          dialogTitle="Rename"
+          isEdit={true}
+        />
+      ) : null}
+      <TreeList tree={tree} />
+      <RightClickMenu
+        deleteItem={handleDeleteItem}
+        renameItem={handleRenameItem}
+        loadTreeFromDb={handleLoadTreeFromDb}
+        saveTree={handleSaveTree}
+        addSubmenu={handleAddSubmenu}
+      />
     </Fragment>
   );
 };

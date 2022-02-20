@@ -7,6 +7,8 @@ import "./Contextmenu.css";
 
 const RightClickMenu = ({
   id,
+  contextId,
+  contextDepth,
   selectedMenus,
   deleteItem,
   addSubmenu,
@@ -16,19 +18,19 @@ const RightClickMenu = ({
   depth,
 }) => {
   const handleDelete = (e, data, target) => {
-    deleteItem(e, data.contextId, data.depth, selectedMenus);
+    deleteItem(data.contextId, data.contextDepth);
   };
   const handleAddSubmenu = (e, data, target) => {
-    addSubmenu(e, data.contextId, data.depth, selectedMenus);
+    addSubmenu(data.contextId, data.contextDepth);
   };
-  const handleRename = (e, data, target) => {
-    renameItem(e, data.contextId, data.depth, selectedMenus);
+  const handleRename = (e, data) => {
+    renameItem(data.contextId, data.contextDepth);
   };
   const handleLoadTreeFromDb = (e, data, target) => {
-    loadTreeFromDb(e, data);
+    loadTreeFromDb(data.contextId, data.contextDepth);
   };
   const handleSaveTree = (e, data, target) => {
-    saveTree(e, data);
+    saveTree();
   };
   return (
     <div>
@@ -48,7 +50,11 @@ const RightClickMenu = ({
           <span>Add Submenu</span>
         </MenuItem>
         <MenuItem
-          data={{ id: "contextId", depth: depth, selectedMenus: selectedMenus }}
+          data={{
+            id: "contextId",
+            contextId: contextId,
+            contextDepth: contextDepth,
+          }}
           onClick={handleRename}
         >
           <ImPencil className="rename" />

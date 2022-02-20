@@ -1,76 +1,76 @@
-export const data = [
+export const mockData = [
   {
-    id: 1,
+    id: "1",
     label: "Menu",
     branches: [
       {
-        id: 23,
+        id: "23",
         label: "Products",
         branches: [
           {
-            id: 88,
-            label: "Woman",
+            id: "8",
+            label: "Women",
             branches: [
-              { id: 88 - 2, label: "Dress" },
-              { id: 99 - 2, label: "Shoes" },
-              { id: 999 - 2, label: "Hat" },
+              { id: "8-2", label: "Dress" },
+              { id: "8-3", label: "Shoes" },
+              { id: " 8-4", label: "Hat" },
             ],
           },
           {
-            id: 99,
-            label: "Man",
+            id: "9-2",
+            label: "Men",
             branches: [
-              { id: 88 - 3, label: "Hat" },
-              { id: 99 - 3, label: "test" },
-              { id: 999 - 3, label: "test2" },
+              { id: "9-3", label: "Hat" },
+              { id: "9-5", label: "test" },
+              { id: "9-6", label: "test2" },
             ],
           },
-          { id: 999, label: "Children" },
+          { id: "7", label: "Children" },
         ],
       },
-      { id: 43, label: "Contact Us" },
-      {
-        id: 45,
-        label: "soon",
-        branches: [
-          { id: 43, label: "soon" },
-          { id: 46, label: "soon" },
-        ],
-      },
+      { id: "7-1", label: "Contact Us" },
+      // {
+      //   id: "45",
+      //   label: "Coming Soon",
+      //   branches: [
+      //     { id: "45-1", label: "Coming Soon" },
+      //     { id: "46", label: "Coming Soon" },
+      //   ],
+      // },
     ],
   },
-  {
-    id: 12,
-    label: "soon",
-    branches: [
-      {
-        id: 232,
-        label: "soon",
-        branches: [
-          { id: 848, label: "soon" },
-          { id: 959, label: "soon" },
-        ],
-      },
-      { id: 433, label: "soon" },
-      {
-        id: 445,
-        label: "soon",
-        branches: [
-          { id: 443, label: "soon" },
-          {
-            id: 456,
-            label: "soon",
-            branches: [
-              { id: 97, label: "soon" },
-              { id: 56, label: "soon" },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 15,
-    label: "Final Sale",
-  },
+  // {
+  //   id: "12",
+  //   label: "Coming Soon",
+  //   branches: [
+  //     {
+  //       id: "232",
+  //       label: "Coming Soon",
+  //       branches: [
+  //         { id: "848", label: "Coming Soon" },
+  //         { id: "959", label: "Coming Soon" },
+  //       ],
+  //     },
+  //     { id: "433", label: "Coming Soon" },
+  //     {
+  //       id: "445",
+  //       label: "Coming Soon",
+  //       branches: [
+  //         { id: "443ca", label: "Coming Soon" },
+  //         {
+  //           id: "456",
+  //           label: "Coming Soon",
+  //           branches: [
+  //             { id: "97", label: "Coming Soon" },
+  //             { id: "56", label: "Coming Soon" },
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "Last-ID",
+  //   label: "Final Sale",
+  // },
 ];

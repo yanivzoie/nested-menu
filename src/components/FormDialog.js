@@ -9,18 +9,26 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { v4 as uuidv4 } from "uuid";
 
 export default function FormDialog({
-  addSubmenu,
+  onAddSubmenuSubmit,
+  onEditSubmenuSubmit,
   shouldOpen,
   closeDialog,
   dialogTitle,
+  isEdit,
 }) {
   const textRef = useRef();
   const handleClose = () => {
     closeDialog(true);
   };
-  const handleSubmit = () => {
+  const handleAddSubmit = () => {
     if (textRef.current.value !== "") {
-      addSubmenu({ id: uuidv4(), label: textRef.current.value });
+      onAddSubmenuSubmit({ id: uuidv4(), label: textRef.current.value });
+      closeDialog(true);
+    }
+  };
+  const handleEditSubmit = () => {
+    if (textRef.current.value !== "") {
+      onEditSubmenuSubmit({label: textRef.current.value} );
       closeDialog(true);
     }
   };
@@ -29,14 +37,13 @@ export default function FormDialog({
       <Dialog open={shouldOpen} onClose={handleClose}>
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please add Submenu..</DialogContentText>
           <TextField
             required
             inputRef={textRef}
             autoFocus
             margin="dense"
             id="name"
-            label="Submenu"
+            label="Type here please.."
             type="text"
             fullWidth
             variant="standard"
@@ -44,7 +51,11 @@ export default function FormDialog({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Done</Button>
+          {isEdit ? (
+            <Button onClick={handleEditSubmit}>Done</Button>
+          ) : (
+            <Button onClick={handleAddSubmit}>Done</Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>
