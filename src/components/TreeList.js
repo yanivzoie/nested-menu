@@ -6,8 +6,9 @@ import "./Tree.css";
 const TreeList = ({ tree, depth = 0 }) => {
   const [isTreeOpen, setIsTreeOpen] = useState(false);
   const [selectedMenus, setSelectedMenus] = useState([]);
-  const icon = !isTreeOpen ? <IoChevronDown /> : <IoChevronUp />;
 
+  const icon = !isTreeOpen ? <IoChevronDown /> : <IoChevronUp />;
+  
   const handleMenuSelection = (id, depth) => {
     setSelectedMenus((prevSelectedMenus) => {
       const newSelectedMenus = [...prevSelectedMenus];
@@ -25,14 +26,14 @@ const TreeList = ({ tree, depth = 0 }) => {
     <Fragment>
       {Array.isArray(tree) &&
         tree.map((item) => (
-          <ContextMenuTrigger
-            id="contextmenu"
-            key={item.id}
-            contextId={item.id}
-            collect={(p) => p}
-            contextDepth={depth + 1}
-          >
-            <div className="container">
+          <div key={item.id} className="container">
+            <ContextMenuTrigger
+              id="contextmenu"
+              key={item.id}
+              contextId={item.id}
+              collect={(p) => p}
+              contextDepth={depth + 1}
+            >
               <div
                 className="tree"
                 onClick={() => {
@@ -51,11 +52,12 @@ const TreeList = ({ tree, depth = 0 }) => {
                     tree={item.branches}
                     depth={depth + 1}
                     selectedMenus={selectedMenus}
+                    open={isTreeOpen}
                   />
                 </div>
               )}
-            </div>
-          </ContextMenuTrigger>
+            </ContextMenuTrigger>
+          </div>
         ))}
     </Fragment>
   );

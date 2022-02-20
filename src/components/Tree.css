@@ -1,8 +1,13 @@
 .container {
   /* width: 140px; */
+  /* height: 100%; */
+  margin-left: 20px;
+
 }
 .react-contextmenu-wrapper {
   width: 140px;
+  height: 49px;
+  
 }
 .tree {
   cursor: pointer;
@@ -12,9 +17,10 @@
   border: 1px solid black;
   background-color: #d6e6ff;
   width: 100%;
+  height: 100%;
 }
 .sub {
-  margin-left: 120px;
+  margin-left: 124px;
   margin-top: 3px;
 
   /* width: 120px;
