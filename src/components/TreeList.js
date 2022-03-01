@@ -8,7 +8,7 @@ const TreeList = ({ tree, depth = 0 }) => {
   const [selectedMenus, setSelectedMenus] = useState([]);
 
   const icon = !isTreeOpen ? <IoChevronDown /> : <IoChevronUp />;
-  
+
   const handleMenuSelection = (id, depth) => {
     setSelectedMenus((prevSelectedMenus) => {
       const newSelectedMenus = [...prevSelectedMenus];
